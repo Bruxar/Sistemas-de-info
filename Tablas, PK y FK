@@ -1,0 +1,42 @@
+CREATE TABLE CLIENTE(
+rut_cliente number(5) not null,
+nombre varchar(60) not null,
+apellido_mat varchar(60) not null,
+apellido_pat varchar(60) not null,
+correo varchar(150) not null
+);
+
+CREATE TABLE PLAN_ATENCION(
+id_plan number(5) not null,
+nombre_prod varchar(70),
+nombre_serv varchar(70),
+monto_plan number(8) not null,
+desc_plan varchar(100) not null
+);
+
+CREATE TABLE DETALLE_FACTURA(
+id_detalle number(5) not null,
+rut_cliente number(5) not null,
+id_plan number(5) not null,
+monto_total number(8) not null,
+fecha_detalle date not null
+);
+
+CREATE TABLE REGISTRO_CLIENTES(		--Tabla que almacena el registro
+DETALLE VARCHAR(200) not null		--de acciones para clientes
+FECHA_REG DATE not null
+);
+
+CREATE TABLE REGISTRO_PLANES(		--Tabla que almacena el registro
+DETALLE VARCHAR(200) not null,		--de acciones para planes de atencion
+FECHA_REG DATE not null
+);
+
+--PK
+ALTER TABLE CLIENTE ADD CONSTRAINT PK_CLIENTE PRIMARY KEY (rut_cliente);
+ALTER TABLE PLAN_ATENCION ADD CONSTRAINT PK_PLAN PRIMARY KEY (id_plan);
+ALTER TABLE DETALLE_FACTURA ADD CONSTRAINT PK_DETALLE PRIMARY KEY (id_detalle);
+
+--FK
+ALTER TABLE DETALLE_FACTURA ADD CONSTRAINT FK_DETALLE_RUT FOREIGN KEY (rut_cliente) REFERENCES CLIENTE(rut_cliente);
+ALTER TABLE DETALLE_FACTURA ADD CONSTRAINT FK_DETALLE_PLAN FOREIGN KEY (id_plan) REFERENCES PLAN_ATENCION(id_plan);
