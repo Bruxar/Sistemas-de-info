@@ -6,9 +6,13 @@ package Cliente.dao;
 
 import java.sql.Connection;
 import Entity.Cliente;
+import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import java.sql.ResultSet;
+import javax.swing.JOptionPane;
 /**
  *
  * @author Moises
@@ -47,7 +51,7 @@ public class ClienteDAO
     
     public String modificarCliente(Connection con, Cliente c){
         PreparedStatement pst = null;
-        String sql = "UPDATE CLIENTE SET = nombre = ?, apellido_mat = ?, apellido_pat = ?, correo = ?"
+        String sql = "UPDATE CLIENTE SET NOMBRE = ?, APELLIDO_MAT = ?, APELLIDO_PAT = ?, CORREO = ?"
                    + "WHERE rut_cliente = ?";
         
         try 
@@ -67,7 +71,7 @@ public class ClienteDAO
             
         } catch (SQLException e)
         {
-            mensaje = "No se pudo guardar correctamente \n " + e.getMessage();
+            mensaje = "No se pudo actualizar correctamente \n " + e.getMessage();
         }
         
         return mensaje;
@@ -76,13 +80,16 @@ public class ClienteDAO
     public String eliminarCliente(Connection con, int id){
         PreparedStatement pst = null;
         String sql = "DELETE FROM CLIENTE WHERE rut_cliente = ?";
+        Statement st = null;
+        ResultSet rs = null;
         
         try 
         {
+            
             pst = con.prepareStatement(sql);
             pst.setInt(1, id);
             
-            mensaje = "Actualizado correctamente.";
+            mensaje = "Eliminado correctamente.";
             
             pst.execute();
             pst.close();
@@ -90,16 +97,40 @@ public class ClienteDAO
             
         } catch (SQLException e)
         {
-            mensaje = "No se pudo guardar correctamente \n " + e.getMessage();
+            mensaje = "No se pudo eliminar correctamente \n " + e.getMessage();
         }
         
-        return null;
+        return mensaje;
     }
     
     public void listarCliente(Connection con, JTable tabla)
     {
+        DefaultTableModel model;
+        String [] columnas = {"RUT", "NOMBRES", "APELLIDO_MAT", "APELLIDO_PAT", "CORREO"};
+        model = new DefaultTableModel(null, columnas);
         
+         String sql = "SELECT * FROM CLIENTE ORDER BY APELLIDO_PAT";
+        //String sql = "select rut_cliente as RUT, apellido_pat || ' ' || apellido_mat as APELLIDOS, nombre as NOMBRES, correo as CORREO from cliente order by apellido_pat";
+        
+        String [] filas = new String[5];
+        //String [] filas = new String[4];
+        
+        Statement st = null;
+        ResultSet rs = null;
+        
+        try {
+            st = con.createStatement();
+            rs = st.executeQuery(sql);
+            while (rs.next()){
+                for (int i = 0; i < 5; i++) {
+                    filas[i] = rs.getString(i+1);
+                }
+                model.addRow(filas);
+            }
+            tabla.setModel(model);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "NO se puede listar la tabla");
+        }
     }
-    
 }
 

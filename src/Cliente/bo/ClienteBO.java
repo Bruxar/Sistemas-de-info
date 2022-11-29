@@ -8,6 +8,8 @@ import Entity.Cliente;
 import java.sql.Connection;
 import Cliente.dao.ClienteDAO;
 import Conexion.Conexion;
+import javax.swing.JTable;
+import java.sql.SQLException;
 /**
  *
  * @author Moises
@@ -46,7 +48,6 @@ public class ClienteBO {
         try 
         {
             mensaje = cdao.modificarCliente(conn, c);
-            conn.rollback();
             
         } catch (Exception e)
         {
@@ -70,7 +71,6 @@ public class ClienteBO {
         try 
         {
             mensaje = cdao.eliminarCliente(conn, id);
-            conn.rollback();
             
         } catch (Exception e)
         {
@@ -88,7 +88,14 @@ public class ClienteBO {
         return mensaje;
     }
     
-    public void listarCliente(){
+    public void listarCliente(JTable tabla){
+      Connection conn = Conexion.getConnection();
+      cdao.listarCliente(conn, tabla);
+        try {
+            conn.close();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
     
 }

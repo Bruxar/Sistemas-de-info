@@ -1,8 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
+
 package Cliente;
+
+import Cliente.bo.ClienteBO;
+import Entity.Cliente;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -13,8 +14,15 @@ public class FrmCliente extends javax.swing.JFrame {
     /**
      * Creates new form FrmEmpleado
      */
+    private ClienteBO cbo = new ClienteBO();
+    
     public FrmCliente() {
         initComponents();
+        listarCliente();
+    }
+    
+    public void listarCliente(){
+        cbo.listarCliente(tbClientes);
     }
 
     /**
@@ -28,7 +36,7 @@ public class FrmCliente extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        txtId = new javax.swing.JTextField();
+        txtRUT = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         txtNombres = new javax.swing.JTextField();
@@ -45,8 +53,6 @@ public class FrmCliente extends javax.swing.JFrame {
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        txtRut1 = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -55,11 +61,11 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel1.setText("ID:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 30, -1));
+        jLabel1.setText("RUT:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 60, 120, -1));
 
-        txtId.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jPanel1.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 210, 30));
+        txtRUT.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
+        jPanel1.add(txtRUT, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 60, 210, 30));
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel2.setText("FORMULARIO CLIENTES");
@@ -93,22 +99,27 @@ public class FrmCliente extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel6.setText("Correo:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 90, -1));
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 90, -1));
 
         txtCorreo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jPanel1.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 260, 210, 30));
+        jPanel1.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 210, 30));
 
         tbClientes.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {},
+                {},
+                {},
+                {}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
+        tbClientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbClientesMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tbClientes);
 
         jPanel1.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 90, 390, 320));
@@ -163,13 +174,6 @@ public class FrmCliente extends javax.swing.JFrame {
         });
         jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 360, 100, -1));
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel7.setText("RUT:");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 90, -1));
-
-        txtRut1.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
-        jPanel1.add(txtRut1, new org.netbeans.lib.awtextra.AbsoluteConstraints(170, 220, 210, 30));
-
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 790, 430));
 
         pack();
@@ -177,27 +181,91 @@ public class FrmCliente extends javax.swing.JFrame {
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         // TODO add your handling code here:
+        System.exit(0);
     }//GEN-LAST:event_btnSalirActionPerformed
 
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
-        // TODO add your handling code here:
+        // primero hay q validar los botones
+        if (txtRUT.getText().isEmpty() || txtNombres.getText().isEmpty() 
+            || txtApellidoPat.getText().isEmpty() || txtApellidoMat.getText().isEmpty() || txtCorreo.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Llene todos los campos");
+        } else {
+            Cliente c = new Cliente();
+            c.setRut(Integer.parseInt(txtRUT.getText()));
+            c.setNombres(txtNombres.getText());
+            c.setApellido_mat(txtApellidoMat.getText());
+            c.setApellido_pat(txtApellidoPat.getText());
+            c.setCorreo(txtCorreo.getText());
+            
+            
+            
+            String mensaje = cbo.agregarCliente(c);
+            JOptionPane.showMessageDialog(null, mensaje);
+            limpiar();
+            listarCliente();
+        }
+        
     }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         // TODO add your handling code here:
+        if (txtRUT.getText().isEmpty() || txtNombres.getText().isEmpty() 
+            || txtApellidoPat.getText().isEmpty() || txtApellidoMat.getText().isEmpty() || txtCorreo.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Llene todos los campos");
+        } else {
+            Cliente c = new Cliente();
+            c.setRut(Integer.parseInt(txtRUT.getText()));
+            c.setNombres(txtNombres.getText());
+            c.setApellido_mat(txtApellidoMat.getText());
+            c.setApellido_pat(txtApellidoPat.getText());
+            c.setCorreo(txtCorreo.getText());
+            
+            
+            
+            String mensaje = cbo.modificarCliente(c);
+            JOptionPane.showMessageDialog(null, mensaje);
+            limpiar();
+            listarCliente();
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
+        if (txtRUT.getText().isEmpty()){
+            JOptionPane.showMessageDialog(null, "No puede faltar el RUT.");
+        } else {
+
+            String mensaje = cbo.eliminarCliente(Integer.parseInt(txtRUT.getText()));
+            JOptionPane.showMessageDialog(null, mensaje);
+            limpiar();
+            listarCliente();
+        }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
-        // TODO add your handling code here:
+        limpiar();
     }//GEN-LAST:event_btnLimpiarActionPerformed
-
+    
+    public void limpiar(){
+        txtRUT.setText("");
+        txtNombres.setText("");
+        txtApellidoMat.setText("");
+        txtApellidoPat.setText("");
+        txtCorreo.setText("");
+    }     
     private void txtApellidoPatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtApellidoPatActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtApellidoPatActionPerformed
+
+    private void tbClientesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbClientesMouseClicked
+        // TODO add your handling code here:
+        int seleccion = tbClientes.rowAtPoint(evt.getPoint());
+        txtRUT.setText(tbClientes.getValueAt(seleccion, 0)+"");
+        txtNombres.setText(tbClientes.getValueAt(seleccion, 1)+"");
+        txtApellidoMat.setText(tbClientes.getValueAt(seleccion, 2)+"");
+        txtApellidoPat.setText(tbClientes.getValueAt(seleccion, 3)+"");
+        txtCorreo.setText(tbClientes.getValueAt(seleccion, 4)+"");
+    }//GEN-LAST:event_tbClientesMouseClicked
 
     /**
      * @param args the command line arguments
@@ -247,15 +315,13 @@ public class FrmCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tbClientes;
     private javax.swing.JTextField txtApellidoMat;
     private javax.swing.JTextField txtApellidoPat;
     private javax.swing.JTextField txtCorreo;
-    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNombres;
-    private javax.swing.JTextField txtRut1;
+    private javax.swing.JTextField txtRUT;
     // End of variables declaration//GEN-END:variables
 }
