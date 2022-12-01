@@ -1,5 +1,5 @@
 CREATE TABLE CLIENTE(
-rut_cliente number(5) not null,
+rut_cliente number(20) not null,
 nombre varchar(60) not null,
 apellido_mat varchar(60) not null,
 apellido_pat varchar(60) not null,
