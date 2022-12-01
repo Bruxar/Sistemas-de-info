@@ -1,8 +1,12 @@
 
 package Frm;
 
-import Cliente.bo.ClienteBO;
+import BO.ClienteBO;
+import Conexion.Conexion;
 import Entity.Cliente;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
 /**
@@ -10,15 +14,13 @@ import javax.swing.JOptionPane;
  * @author Moises
  */
 public class FrmCliente extends javax.swing.JFrame {
-
-    /**
-     * Creates new form FrmEmpleado
-     */
+    
     private ClienteBO cbo = new ClienteBO();
     
     public FrmCliente() {
         initComponents();
         listarCliente();
+        Fillcombo();
         setTitle("MENÚ CLIENTES");
         setLocationRelativeTo(null);
         setResizable(false);
@@ -26,6 +28,28 @@ public class FrmCliente extends javax.swing.JFrame {
     
     public void listarCliente(){
         cbo.listarCliente(tbClientes);
+    }
+    
+    private void Fillcombo(){
+        Connection conn = Conexion.getConnection();
+        PreparedStatement pst;
+        ResultSet rs;
+        
+        try {
+            String sql = "select * from PLAN_ATENCION";
+            pst = conn.prepareStatement(sql);
+            rs  = pst.executeQuery();
+            
+            while(rs.next()){
+                String name = rs.getString("NOMBRE_PLAN");
+                Combo_Planes.addItem(name);
+                
+            }
+            
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
     }
 
     /**
@@ -56,6 +80,8 @@ public class FrmCliente extends javax.swing.JFrame {
         btnEliminar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         label_ventana1 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        Combo_Planes = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -97,8 +123,8 @@ public class FrmCliente extends javax.swing.JFrame {
         jPanel1.add(txtApellidoMat, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 180, 240, 30));
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel6.setText("Correo:");
-        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 90, -1));
+        jLabel6.setText("Planes:");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 80, -1));
 
         txtCorreo.setFont(new java.awt.Font("Segoe UI", 0, 18)); // NOI18N
         jPanel1.add(txtCorreo, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 220, 240, 30));
@@ -143,7 +169,7 @@ public class FrmCliente extends javax.swing.JFrame {
                 btnAgregarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 300, 110, -1));
+        jPanel1.add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 390, 110, -1));
 
         btnModificar.setBackground(new java.awt.Color(204, 204, 204));
         btnModificar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -153,7 +179,7 @@ public class FrmCliente extends javax.swing.JFrame {
                 btnModificarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, -1, -1));
+        jPanel1.add(btnModificar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 490, -1, -1));
 
         btnEliminar.setBackground(new java.awt.Color(204, 204, 204));
         btnEliminar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -163,7 +189,7 @@ public class FrmCliente extends javax.swing.JFrame {
                 btnEliminarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 350, 110, -1));
+        jPanel1.add(btnEliminar, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 440, 110, -1));
 
         btnLimpiar.setBackground(new java.awt.Color(204, 204, 204));
         btnLimpiar.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
@@ -173,11 +199,22 @@ public class FrmCliente extends javax.swing.JFrame {
                 btnLimpiarActionPerformed(evt);
             }
         });
-        jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 300, 110, -1));
+        jPanel1.add(btnLimpiar, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 390, 110, -1));
 
         label_ventana1.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         label_ventana1.setText("MENÚ CLIENTES");
         jPanel1.add(label_ventana1, new org.netbeans.lib.awtextra.AbsoluteConstraints(820, 20, -1, -1));
+
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel7.setText("Correo:");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 220, 90, -1));
+
+        Combo_Planes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Combo_PlanesActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Combo_Planes, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 260, 240, 30));
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1040, 560));
 
@@ -203,7 +240,7 @@ public class FrmCliente extends javax.swing.JFrame {
             c.setApellido_mat(txtApellidoMat.getText());
             c.setApellido_pat(txtApellidoPat.getText());
             c.setCorreo(txtCorreo.getText());
-            
+            c.setId_plan(Combo_Planes.getSelectedItem().toString());
             
             
             String mensaje = cbo.agregarCliente(c);
@@ -274,6 +311,10 @@ public class FrmCliente extends javax.swing.JFrame {
         txtCorreo.setText(tbClientes.getValueAt(seleccion, 4)+"");
     }//GEN-LAST:event_tbClientesMouseClicked
 
+    private void Combo_PlanesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Combo_PlanesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Combo_PlanesActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -311,6 +352,7 @@ public class FrmCliente extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JComboBox<String> Combo_Planes;
     private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnEliminar;
     private javax.swing.JButton btnLimpiar;
@@ -321,6 +363,7 @@ public class FrmCliente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel label_ventana1;
